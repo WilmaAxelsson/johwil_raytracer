@@ -1,0 +1,6 @@
+﻿  Camera.cpp
+C:\GLP\johwil_raytracer\Camera.h(15,50): error C2079: 'Camera::matrix' uses undefined class 'std::array<std::array<Pixel,300>,300>'
+C:\GLP\johwil_raytracer\Camera.cpp(16,4): error C2065: 'pixels': undeclared identifier
+  main.cpp
+C:\GLP\johwil_raytracer\Camera.h(15,50): error C2079: 'Camera::matrix' uses undefined class 'std::array<std::array<Pixel,300>,300>'
+  Generating Code...
