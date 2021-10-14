@@ -2,7 +2,7 @@
 
 
 
-Vertex::Vertex(int inX, int inY, int inZ) {
+Vertex::Vertex(float inX, float inY, float inZ) {
 	w = 1;
 	x = inX;
 	y = inY;

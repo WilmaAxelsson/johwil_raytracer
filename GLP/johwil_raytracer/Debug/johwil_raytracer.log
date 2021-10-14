@@ -1,6 +1,27 @@
 ﻿  Camera.cpp
-C:\GLP\johwil_raytracer\Camera.h(15,50): error C2079: 'Camera::matrix' uses undefined class 'std::array<std::array<Pixel,300>,300>'
-C:\GLP\johwil_raytracer\Camera.cpp(16,4): error C2065: 'pixels': undeclared identifier
-  main.cpp
-C:\GLP\johwil_raytracer\Camera.h(15,50): error C2079: 'Camera::matrix' uses undefined class 'std::array<std::array<Pixel,300>,300>'
+C:\GLP\johwil_raytracer\Scene.h(19,41): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\GLP\johwil_raytracer\Scene.h(20,46): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\GLP\johwil_raytracer\Scene.h(43,34): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(43,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(44,35): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(44,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(45,36): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(45,30): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(46,35): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(46,30): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Camera.cpp(41,33): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\GLP\johwil_raytracer\Camera.cpp(69,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\GLP\johwil_raytracer\Camera.cpp(69,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Scene.cpp
+C:\GLP\johwil_raytracer\Scene.h(19,41): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\GLP\johwil_raytracer\Scene.h(20,46): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\GLP\johwil_raytracer\Scene.h(43,34): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(43,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(44,35): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(44,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(45,36): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(45,30): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(46,35): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\GLP\johwil_raytracer\Scene.h(46,30): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   Generating Code...
+  johwil_raytracer.vcxproj -> C:\GLP\johwil_raytracer\Debug\johwil_raytracer.exe

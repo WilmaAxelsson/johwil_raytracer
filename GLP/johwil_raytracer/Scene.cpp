@@ -1,16 +1,20 @@
 #include "Scene.h"
 #include "Triangle.h"
+#include <iostream>
 
-Scene::Scene()
+Scene::Scene(){
+
+}
+
+void Scene::castRay(Ray& r)
 {
-	// Floor
-	Triangle t = Triangle(Vertex(1,0,0), Vertex(0, 1, 0), Vertex(1, 2, 0), ColorDbl(150.0,50.0,50.0), Direction(0,0,1));
+	for (Triangle tri : triangleList) {
+
+		if (triangleList->rayIntersection(r)) {
+			std::cout << "hau" << std::endl;
+		}
+	}
 
 
-	//Roof
-
-
-
-	//Six walls
 }
 

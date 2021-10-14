@@ -7,12 +7,13 @@
 class Triangle
 {
 private:
-	Vertex vex1, vex2, vex3; // Skapa vertices med inte default constructors?
+	Vertex v0, v1, v2; // Skapa vertices med inte default constructors?
 	ColorDbl color;
 	Direction normDirection;
 
 public:
 	Triangle(Vertex v1, Vertex v2, Vertex v3, ColorDbl c, Direction d);
-	void rayIntersection(Ray ray);
+	ColorDbl getColor() { return color; }
+	bool rayIntersection(Ray& ray);
 };
 
