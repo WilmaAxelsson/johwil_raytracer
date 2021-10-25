@@ -5,9 +5,10 @@
 class Direction
 {
 private:
-	int x, y, z;
+	
 
 public:
-	Direction(int inX = 0, int inY = 0, int inZ = 0);
+	Direction(float inX = 0.0f, float inY = 0.0f, float inZ = 0.0f);
+	float x, y, z;
 };
 

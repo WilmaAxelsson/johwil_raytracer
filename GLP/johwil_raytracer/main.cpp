@@ -17,8 +17,11 @@ using namespace glm;
 
 int main(void)
 {
-	Scene scene = Scene();
-	Camera camera = Camera(Vertex(0, 0, 0), Vertex(1, 0, 0));
+	Scene scene;
+	Camera camera;
+
+	camera.render(scene);
+	camera.createImage(); //Creates image and stores it in project files
 
 	return 0;
 }
