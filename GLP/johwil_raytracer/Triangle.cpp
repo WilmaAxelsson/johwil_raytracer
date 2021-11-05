@@ -5,12 +5,12 @@
 #include <iostream>
 
 
-Triangle::Triangle(Vertex _v1, Vertex _v2, Vertex _v3, ColorDbl c)
+Triangle::Triangle(Vertex _v1, Vertex _v2, Vertex _v3, Material m)
 {
 	v0 = _v1;
 	v1 = _v2;
 	v2 = _v3;
-	color = c;
+	material = m;
 	//normDirection = d;
 	glm::vec3 directiontemp = glm::normalize(glm::cross(v1.glmVertex - v0.glmVertex, v2.glmVertex - v0.glmVertex));
 	normDirection = Direction(directiontemp.x, directiontemp.y, directiontemp.z);
@@ -97,10 +97,12 @@ bool Triangle::rayIntersection(Ray& ray)
 	
 	//if (glm::length(Vertex(ray.getStartingP() + ray.glmDirection * t)) < minDistance) {
 	// test: skicka tillbaka färgen färgen med rayen
-	
-	ray.setColor(getColor());
+	//if (ray.getMaterial().getType() != SHADOW) {
+		ray.setMaterial(getMaterial());
+	//}
 
-	ray.setEndingP(ray.getStartingP() + ray.getDirection());
+	ray.setEndingP(ray.getStartingP() + ray.getDirection() );
+	ray.setObjectNormal(this->normDirection);
 
 	return true;
 

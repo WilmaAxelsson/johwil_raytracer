@@ -98,7 +98,7 @@ void Camera::render(Scene scene)
 						Direction directionNormalized = Direction(normalized.x, normalized.y, normalized.z);
 
 
-						Ray ray{ currEye, directionNormalized, ColorDbl{0.0f,0.0f,0.0f} };
+						Ray ray{ currEye, directionNormalized, Material(ColorDbl{0.0f,0.0f,0.0f}, LAMBERTIAN) };
 
 						scene.castRay(ray);
 

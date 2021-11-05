@@ -2,11 +2,11 @@
 #include "Sphere.h"
 #include <glm\geometric.hpp>
 
-Sphere::Sphere(Vertex spPos, double r, ColorDbl c)
+Sphere::Sphere(Vertex spPos, double r, Material m)
 {
 	position = spPos; // spherens mittpunkt
 	radius = r;
-	color = c;
+	material = m;
 }
 
 bool Sphere::rayIntersection(Ray& r)
@@ -31,5 +31,9 @@ bool Sphere::rayIntersection(Ray& r)
     If discriminant=0, the line of the ray just touches the sphere in one point (tangent);
     If discriminant>0, the line of the ray touches the sphere in two points (intersected).
     */ 
-        return true;
+    r.setMaterial(getMaterial());
+
+    r.setEndingP(r.getStartingP() + r.getDirection());
+
+    return true;
 }

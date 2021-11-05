@@ -1,19 +1,24 @@
 #include "Scene.h"
 #include "Triangle.h"
 #include <iostream>
+#include "materialTypes.h"
+#include <random>
+#include <glm\geometric.hpp>
 
 Scene::Scene() {
 	createRoom();
 }
 
 void Scene::createRoom() {
-	white = ColorDbl(1.0f, 1.0f, 1.0f);
-	blue = ColorDbl(0.0f, 0.0f, 1.0f);
-	red = ColorDbl(1.0f, 0.0f, 0.0f);
-	green = ColorDbl(0.0f, 1.0f, 0.0f);
-	yellow = ColorDbl(1.0f, 1.0f, 0.0f);
-	pink = ColorDbl(1.0f, 0.75f, 0.79f);
-	purple = ColorDbl(0.62f, 0.12f, 0.94f);
+	// Colors/materials 
+	white = Material(ColorDbl{ 1.0f, 1.0f, 1.0f }, LAMBERTIAN);
+	blue = Material(ColorDbl{ 0.0f, 0.0f, 1.0f }, LAMBERTIAN);
+	red = Material(ColorDbl{ 1.0f, 0.0f, 0.0f }, LAMBERTIAN);
+	green = Material(ColorDbl{ 0.0f, 1.0f, 0.0f }, LAMBERTIAN);
+	yellow = Material(ColorDbl{ 1.0f, 1.0f, 0.0f }, LAMBERTIAN);
+	pink = Material(ColorDbl{ 1.0f, 0.75f, 0.79f }, LAMBERTIAN);
+	purple = Material(ColorDbl{0.62f, 0.12f, 0.94f}, LAMBERTIAN);
+
 
 	move = Vertex(0.0f, 0.0f, 0.0f);
 
@@ -34,8 +39,6 @@ void Scene::createRoom() {
 	 p12 = Vertex(10.0f, -6.0f, 5.0f) + move;
 	 p13 = Vertex(0.0f, -6.0f, 5.0f) + move;
 	 p14 = Vertex(5.0f, 0.0f, 5.0f) + move;
-
-	
 
 	 //directions
 	  /*dirUp = Direction(0.0f, 0.0f, 1.0f);
@@ -138,15 +141,27 @@ void Scene::createRoom() {
 			Triangle(tp1, tp2, tp3, red);
 		triangleList[27] =
 			Triangle(tp0, tp1, tp2, red);
+
+		//Add light to scene
+
+		std::vector<Triangle> lightVec = light.getLight();
+
+		triangleList[28] = lightVec.at(0);
+		triangleList[29] = lightVec.at(1);
+
+		spheresList.push_back(Sphere(Vertex(-5.0f, 3.5f, 1.0f), 1.0, Material(ColorDbl(0.0f,1.0f,0.0f),PERFECT_REFL)));
+
+
 			}
 
-void Scene::castRay(Ray &r)
+void Scene::castRay(Ray &ray)
 {
-	r.setColor(ColorDbl(0.0f, 0.0f, 0.0f));
+	ray.setColor(ColorDbl(0.0f, 0.0f, 0.0f));
+
 	for (Triangle tri : triangleList) {
 	//std::cout << "Triangle color: " << tri.getColor().red << ", "<< tri.getColor().blue << std::endl;
-		if (tri.rayIntersection(r)) {
-			std::cout << "Color of triangle: " << tri.getColor().red << ", " << tri.getColor().green << ", " << tri.getColor().blue << std::endl;
+		if (tri.rayIntersection(ray)) {
+			std::cout << "Color of triangle: " << tri.getMaterial().getColor().red << ", " << tri.getMaterial().getColor().green << ", " << tri.getMaterial().getColor().blue << std::endl;
 			
 		}
 		//if (triangleList->rayIntersection(r)) {
@@ -154,6 +169,98 @@ void Scene::castRay(Ray &r)
 		//}
 	}
 
+	for (Sphere sph : spheresList) {
+		if (sph.rayIntersection(ray)) {
+			
+		}
+	}
+
+	// Vi vill inte räkna ut ytan om shadowray. Vi vill bara sätta rayens slutpunkt!
+
+	if (ray.getMaterial().getType() != SHADOW) {
+
+		//int test = ray.getMaterial().type;
+		// Test what material the triangle has and compute accordingly
+		switch (ray.getMaterial().getType())
+		{
+		case 0: // lightsource
+		{
+			break;
+		}
+		case 1: // Lambertian
+		{
+			ColorDbl directLight = DirectLight(ray, false);// direct light contribution
+			// indirect light contribution
+		}
+		case 2: { //Perfect reflection
+		}
+		case 3: { // Transparent
+
+		}
+		case 4: { //Oren nayar
+			ColorDbl directLight = DirectLight(ray, true);// direct light contribution
+
+		}
+		default: {
+			break;
+		}
+		}
+	}
+}
+
+std::default_random_engine generator;
+std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+ColorDbl Scene::DirectLight(Ray& ray, bool or_na)
+{
+	// Lambertian reflection 
+	// Radiencen from pont x, with the out going direction phiOut equals
+	// the incoming radiance from every possible direction multiplyed by the surface's reflectivity, divided by pi.
+
+	ColorDbl directLight = ColorDbl(0.0f, 0.0f, 0.0f);
+
+	//corners of area light
+	Vertex v0 = Vertex(0.0f, 0.0f, 0.0f);
+	Vertex v1 = Vertex(0.0f, 1.0f, 0.0f);
+	Vertex v2 = Vertex(1.0f, 0.0f, 0.0f);
+	Vertex v3 = Vertex(1.0f, 1.0f, 0.0f);
+	Vertex edge1 = v1 - v0;
+	Vertex edge2 = v2 - v0;
+
+	Direction lightNormal = Direction(0.0f, 0.0f, -1.0f);
+
+	int nrofShadowrays = 3;
+	for (int i = 0; i < nrofShadowrays; i++) {
+
+		//get random point on area light
+		float u = distribution(generator);
+		float v = distribution(generator);
+
+		Vertex uv = Vertex(edge1*u +  edge2*v);
+
+		uv = uv + Vertex(-1.5f, 2.0f, 4.95f);
+
+		Vertex s_i = uv - ray.getEndingP();
+		s_i.glmVertex = glm::vec3(s_i.x, s_i.y, s_i.z);
+
+		float d_i = glm::length(s_i.glmVertex);
+		float cosAlpha = glm::max(0.0f, glm::dot(-s_i.glmVertex, lightNormal.glmDirection));
+		float cosBeta = glm::max(0.0f, glm::dot(s_i.glmVertex, ray.getObjectNormal().glmDirection));
+
+		// shadow ray
+
+		glm::vec3 shadowRayDir = glm::normalize(s_i.glmVertex);
+		Ray shadowRay = Ray(ray.getEndingP(), Direction(shadowRayDir.x, shadowRayDir.y, shadowRayDir.z), Material(ColorDbl{ 0.0f,0.0f,0.0f }, SHADOW));
+		
+		castRay(shadowRay);
+
+		//glm::vec3 glm_dirShadowray = glm::vec3(shadowRay.getDirection().x, shadowRay.getDirection().y, shadowRay.getDirection().z);
+		//float shadowRayLength = glm::length(glm_dirShadowray);
+		
+
+	}
+
+	return directLight;
 
 }
 

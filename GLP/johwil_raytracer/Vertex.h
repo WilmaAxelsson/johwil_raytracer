@@ -17,4 +17,8 @@ public:
 		return Vertex(x + rhs.x, y + rhs.y, z + rhs.z);
 	}
 
+	Vertex operator*(float rhs) {
+		return Vertex(x * rhs, y * rhs, z * rhs);
+	}
+
 };

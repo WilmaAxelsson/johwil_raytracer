@@ -26,7 +26,7 @@ public:
 private:
 	// Vertex eye2 = Vertex(eye1.x + 2, eye1.y, eye1.z)//??
 	// scenens mittpunkt: Vertex(6.0f, 9.0f, 3.0f);
-	Vertex eye1 = Vertex(-3.0f, 0.0f, 0.0f);
+	Vertex eye1 = Vertex(-2.0f, 0.0f, 0.0f);
 	Vertex eye2 = Vertex(-1.0f, 0.0f, 0.0f);
 
 	// Camera plane
@@ -36,7 +36,7 @@ private:
 	Vertex bottomRight{ 0.0f, 1.0f, -1.0f };
 
 	bool eye = false;
-	Vertex currEye = eye1;
+	Vertex currEye = eye2;
 	//std::array<std::array<Pixel, HEIGHT>, WIDTH> pixels; //brukade ge "incomplete type", vi behövde #include <array>
 	//std::array<std::vector<Pixel>, WIDTH> pixels;
 
