@@ -1,5 +1,6 @@
 #pragma once
-#include "Vertex.h"
+
+#include "definitions.h"
 
 class ColorDbl
 {
@@ -12,6 +13,17 @@ public:
 	}
 	ColorDbl operator/(float y) {
 		return ColorDbl(red / y, green / y, blue / y);
+	}
+	ColorDbl operator*(float y) {
+		return ColorDbl(red * y, green * y, blue * y);
+	}
+
+	ColorDbl operator+(ColorDbl y) {
+		return ColorDbl(red + y.red, green + y.green, blue + y.blue);
+	}
+
+	ColorDbl operator*(ColorDbl rhs) {
+		return ColorDbl(red * rhs.red, green * rhs.green, blue * rhs.blue);
 	}
 };
 

@@ -1,11 +1,13 @@
 #include "Ray.h"
 
-Ray::Ray(Vertex sP, Direction dir, Material m)
+Ray::Ray(Vertex sP, Direction dir, RayType rt)
 {
 	startingPoint = sP;
 	direction = dir;
-	material  = m;
-	color = material.getColor();
-	glmDirection = glm::vec3(dir.x, dir.y, dir.z);
+	rayType  = rt;
 	
 }
+
+Ray::Ray() = default;
+
+Ray::~Ray() = default;

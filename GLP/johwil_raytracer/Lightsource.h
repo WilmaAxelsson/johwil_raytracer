@@ -1,11 +1,12 @@
 #pragma once
-#include "Vertex.h"
+
+#include "definitions.h"
 #include "ColorDbl.h"
 #include <vector>
 #include "Triangle.h"
 class Lightsource
 {
-    // Gör en liten ljuspunkt, med två triaglar som tillsamans bildar en fyrkant (en liten pointlight)
+    // Make a small point light, with two triangles that form a square
 
 public:
     Lightsource();
@@ -15,11 +16,11 @@ private:
     ColorDbl color;
     Material material;
 
-    // punkter till tianglar   
-    Vertex p1{ 1.5f, 2.0f, 4.99f };
-    Vertex p2{ -1.5f, 2.0f, 4.99f };
-    Vertex p3{ 1.5f, -2.0f, 4.99f };
-    Vertex p4{ -1.5f, -2.0f, 4.99f };
+    //Points for point light  
+    Vertex p1{ 6.5f, 0.5f, 4.95f };
+    Vertex p2{ 5.5f, 0.5f, 4.95f };
+    Vertex p3{ 6.5f, -0.5f, 4.95f };
+    Vertex p4{ 5.5f, -0.5f, 4.95f };
     Triangle t1, t2;
     
         

@@ -1,7 +1,5 @@
 #include "Triangle.h"
-#include <glm\fwd.hpp>
-#include <glm\ext\vector_float3.hpp>
-#include <glm\detail\func_geometric.inl>
+
 #include <iostream>
 
 
@@ -11,52 +9,34 @@ Triangle::Triangle(Vertex _v1, Vertex _v2, Vertex _v3, Material m)
 	v1 = _v2;
 	v2 = _v3;
 	material = m;
-	//normDirection = d;
-	glm::vec3 directiontemp = glm::normalize(glm::cross(v1.glmVertex - v0.glmVertex, v2.glmVertex - v0.glmVertex));
-	normDirection = Direction(directiontemp.x, directiontemp.y, directiontemp.z);
+	normDirection = glm::normalize(glm::cross(v1 - v0, v2 - v0));
 
 }
 
+Triangle::~Triangle() = default;
 
 
 bool Triangle::rayIntersection(Ray& ray)
 {
-	//method to investiagte if ray hits triangle, return true or false
+	//Method to investiagte if ray hits triangle, return true or false
 
-	float minDistance = 1000;
+	float minimumDistance = 1000;
 
-	//Lecture 6 möller trumbore algorithm
-	glm::vec3 edge1 = v1.glmVertex - v0.glmVertex;
-	glm::vec3 edge2 = v2.glmVertex - v0.glmVertex;
-	glm::vec3 T = ray.getStartingP().glmVertex- v0.glmVertex; // T is a point in a triangle ??
+	//Möller trumbore algorithm
+	glm::vec3 edge1 = v1 - v0;
+	glm::vec3 edge2 = v2 - v0;
+	glm::vec3 T = ray.getStartingP()- v0;
 
-	glm::vec3 D = ray.glmDirection; // Direction of ray
-
-	//glm::normalize(D);
-
-	// testar ett test för att se om triangelns normal är "åt rätt håll" för den nuvarande ray:en
-	if (glm::dot(D, (glm::vec3(this->normDirection.x, this->normDirection.y, this->normDirection.z))) > 0.0f)
-	{
-		//std::cout << "Triangel DO face ray" << std::endl;
-	}
-	else
-	{
-		//std::cout << "Triangel DO NOT face ray" << std::endl;
-
-	}
+	glm::vec3 D = ray.getDirection(); // Direction of ray
 
 
-	//Kryssprodukten P mellan direction D och edge2
+	//Crossproduct P between direction D and edge2
 	glm::vec3 P = glm::cross(D, edge2);
-	//glm::vec3 P = glm::cross(D, edge2);
 
-	//Kryssprodukten Q mellan T och edge1
+	//Crossproduct Q between T and edge1
 	glm::vec3 Q = glm::cross(T, edge1);
-	//glm::vec3 Q = glm::cross(T, edge1);
 
-	//Q = glm::normalize(Q);
-
-	//calculate determinant
+	//Calculate determinant
 	float det = glm::dot(P, edge1);
 	float epsilon = 0.0000000000001f;
 	//if determinant is negative, we are facing the back of the trianlge
@@ -70,9 +50,6 @@ bool Triangle::rayIntersection(Ray& ray)
 
 	if (u < 0 || u > 1) { 
 		return false; }
-	else {
-		//std::cout << "u is larger than 0" << std::endl;
-	}
 	
 
 	float v = glm::dot(D, Q) * inverse;
@@ -85,24 +62,18 @@ bool Triangle::rayIntersection(Ray& ray)
 		
 		return false;
 	}
-	else {
-		//std::cout << "u +v is smaller! " << std::endl;
-	}
 	
 	//calculate variable t. we need to t "steps" on the ray to get to the intersectionpoint, i.e the end ponit of the ray
 	float t = glm::dot(edge2, Q) * inverse;
 
-	//if (t > 1.0f || t <= 0.0f)
-	//	return false;
-	
-	//if (glm::length(Vertex(ray.getStartingP() + ray.glmDirection * t)) < minDistance) {
-	// test: skicka tillbaka färgen färgen med rayen
-	//if (ray.getMaterial().getType() != SHADOW) {
+	if (glm::length(Vertex(ray.getStartingP() + ray.getDirection() * t)) < minimumDistance) {
+		ray.setObjectNormal(this->normDirection);
+		ray.setEndingP(ray.getStartingP() + ray.getDirection() * t + this->normDirection * 0.001f);
+		ray.setColor(getColor());
+		minimumDistance = glm::length(ray.getDirection() * t);
 		ray.setMaterial(getMaterial());
-	//}
-
-	ray.setEndingP(ray.getStartingP() + ray.getDirection() );
-	ray.setObjectNormal(this->normDirection);
+		
+	}
 
 	return true;
 

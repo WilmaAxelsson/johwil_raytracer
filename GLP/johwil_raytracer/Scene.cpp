@@ -3,14 +3,17 @@
 #include <iostream>
 #include "materialTypes.h"
 #include <random>
-#include <glm\geometric.hpp>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 Scene::Scene() {
 	createRoom();
 }
 
+Scene::~Scene() = default;
+
 void Scene::createRoom() {
-	// Colors/materials 
+	// Colors with material Lambertian
 	white = Material(ColorDbl{ 1.0f, 1.0f, 1.0f }, LAMBERTIAN);
 	blue = Material(ColorDbl{ 0.0f, 0.0f, 1.0f }, LAMBERTIAN);
 	red = Material(ColorDbl{ 1.0f, 0.0f, 0.0f }, LAMBERTIAN);
@@ -20,50 +23,28 @@ void Scene::createRoom() {
 	purple = Material(ColorDbl{0.62f, 0.12f, 0.94f}, LAMBERTIAN);
 
 
-	move = Vertex(0.0f, 0.0f, 0.0f);
-
 	// the vertices of the floor
-	 p1 = Vertex(-3.0f, 0.0f, -5.0f) + move;
-	 p2 = Vertex(0.0f, 6.0f, -5.0f) + move;
-	 p3 = Vertex(10.0f, 6.0f, -5.0f) + move;
-	 p4 = Vertex(13.0f, 0.0f, -5.0f) + move;
-	 p5 = Vertex(10.0f, -6.0f, -5.0f) + move;
-	 p6 = Vertex(0.0f, -6.0f, -5.0f) + move;
-	 p7 = Vertex(5.0f, 0.0f, -5.0f) + move;
+	 p1 = Vertex(-3.0f, 0.0f, -5.0f);
+	 p2 = Vertex(0.0f, 6.0f, -5.0f);
+	 p3 = Vertex(10.0f, 6.0f, -5.0f);
+	 p4 = Vertex(13.0f, 0.0f, -5.0f);
+	 p5 = Vertex(10.0f, -6.0f, -5.0f);
+	 p6 = Vertex(0.0f, -6.0f, -5.0f);
+	 p7 = Vertex(5.0f, 0.0f, -5.0f);
 
 	//the vertices of the roof
-	 p8 = Vertex(-3.0f, 0.0f, 5.0f) + move;
-	 p9 = Vertex(0.0f, 6.0f, 5.0f) + move;
-	 p10 = Vertex(10.0f, 6.0f, 5.0f) + move;
-	 p11 = Vertex(13.0f, 0.0f, 5.0f) + move;
-	 p12 = Vertex(10.0f, -6.0f, 5.0f) + move;
-	 p13 = Vertex(0.0f, -6.0f, 5.0f) + move;
-	 p14 = Vertex(5.0f, 0.0f, 5.0f) + move;
-
-	 //directions
-	  /*dirUp = Direction(0.0f, 0.0f, 1.0f);
-	  dirDown = Direction(0.0f, 0.0f, -1.0f);
-	  dirA = Direction(0.5f, 0.5f, 0.0f); //diagonal left, closest wall
-	  dirB = Direction(0.5f, -0.5f, 0.0f); //diagonal left, farthest wall
-	  dirC = Direction(-0.5f, -0.5f, 0.0f); // diagonal right, farthest wall
-	  dirD = Direction(-0.5f, 0.5f, 0.0f); // diagonal right, closest wall
-
-	  dirE = Direction(1.0f, 0.0f, 0.0f); //left wall
-	  dirF = Direction(-1.0f, 0.0f, 0.0f); //right wall
-	  */
-
-
-	 //Ger grön triangel:
-	// triangleList[0] =
-		 // Floor, 6 trianglar
-
-	//	 Triangle(Vertex(7.0f, -0.1f, -0.1f), Vertex(7.0f, 0.1f, -0.1f), Vertex(7.0f, 0.0f, 0.1f), green); //a // dirUp
-	 //  Triangle(Vertex(-3.0f, -3.0f, -1.0f), Vertex(-3.0f, 3.0f, -1.0f), Vertex(-3.0f, 0.0f, 1.0f), green); //a // dirUp
-	  
+	 p8 = Vertex(-3.0f, 0.0f, 5.0f);
+	 p9 = Vertex(0.0f, 6.0f, 5.0f);
+	 p10 = Vertex(10.0f, 6.0f, 5.0f);
+	 p11 = Vertex(13.0f, 0.0f, 5.0f);
+	 p12 = Vertex(10.0f, -6.0f, 5.0f);
+	 p13 = Vertex(0.0f, -6.0f, 5.0f);
+	 p14 = Vertex(5.0f, 0.0f, 5.0f);
 	 
-	/////__THE ROOM__//////////////////////////
+	/////  THE ROOM //////////////////////////
+
 	triangleList[0] =
-		  // Floor, 6 trianglar
+		  // Floor, 6 triangles
 		  Triangle(p7, p2, p1, white); //a // dirUp
 	triangleList[1] =
 		  Triangle(p7, p3, p2, white); //b
@@ -77,8 +58,8 @@ void Scene::createRoom() {
 		  Triangle(p7, p1, p6, white); //f
 
 	triangleList[6] =
-		// roof, 6 trianglar
-		Triangle(p14, p8, p9, white); // dirDown
+		// Roof, 6 triangles
+		Triangle(p14, p8, p9, white);
 	triangleList[7] =
 		Triangle(p14, p9, p10, white);
 	triangleList[8] =
@@ -92,29 +73,29 @@ void Scene::createRoom() {
 
 		// walls 
 		triangleList[12] =
-			Triangle(p1, p9, p8, red); //dirA
+			Triangle(p1, p9, p8, red);
 		triangleList[13] =
 			Triangle(p1, p2, p9, red);
 
 		triangleList[14] =
-			Triangle(p2, p10, p9, blue); // dirE
+			Triangle(p2, p10, p9, blue); 
 		triangleList[15] =
 			Triangle(p2, p3, p10, blue);
 
 		triangleList[16] =
-			Triangle(p3, p11, p10, green); //dirB
+			Triangle(p3, p11, p10, Material(ColorDbl{ 0.0f, 1.0f, 0.0f }, PERFECT_REFL));
 		triangleList[17] =
-			Triangle(p3, p4, p11, green);
+			Triangle(p3, p4, p11, Material(ColorDbl{ 0.0f, 1.0f, 0.0f }, PERFECT_REFL));
 
 
 		triangleList[18] =
-			Triangle(p4, p12, p11, yellow); //dirC
+			Triangle(p4, p12, p11, yellow);
 		triangleList[19] =
 			Triangle(p4, p5, p12, yellow);
 
 
 		triangleList[20] =
-			Triangle(p5, p13, p12, purple); //dirF
+			Triangle(p5, p13, p12, purple);
 		triangleList[21] =
 			Triangle(p5, p6, p13, purple);
 
@@ -123,15 +104,13 @@ void Scene::createRoom() {
 			Triangle(p6, p8, p13, pink);
 		triangleList[23] =
 			Triangle(p6, p1, p8, pink);
-		/////////////////////////////////////////////
 
-	/////__THE tetrahedron_//////////////////////////
-
-	//Vertex 
-		tp0 = Vertex(6.0f, 2.0f, 0.0f);
-		tp1 = Vertex(6.0f, 5.0f, 0.0f);
-		tp2 = Vertex(3.0f, 3.5f, 0.0f);
-		tp3 = Vertex(4.5f, 3.5f, 3.0f);
+	/////////// Tetrahedrons_//////////////////////////
+		//tetrahedron 1
+		tp0 = Vertex(8.0f, 3.0f, -4.5f);
+		tp1 = Vertex(8.0f, 6.0f, -4.5f);
+		tp2 = Vertex(5.0f, 4.5f, -4.5f);
+		tp3 = Vertex(6.5f, 4.5f, -1.5f);
 
 		triangleList[24] =
 			Triangle(tp0, tp1, tp3, red);
@@ -140,46 +119,61 @@ void Scene::createRoom() {
 		triangleList[26] =
 			Triangle(tp1, tp2, tp3, red);
 		triangleList[27] =
-			Triangle(tp0, tp1, tp2, red);
+			Triangle(tp0, tp2, tp1, red);
+
+		//tetrahedron 2
+		tp4 = Vertex(6.0f, 0.0f, -4.9f);
+		tp5 = Vertex(6.0f, 3.0f, -4.9f);
+		tp6 = Vertex(5.0f, 1.5f, -4.9f);
+		tp7 = Vertex(5.5f, 1.5f, -2.9f);
+
+		triangleList[28] =
+			Triangle(tp4, tp5, tp7, pink);
+		triangleList[29] =
+			Triangle(tp4, tp7, tp6, pink);
+		triangleList[30] =
+			Triangle(tp5, tp6, tp7, pink);
+		triangleList[31] =
+			Triangle(tp4, tp6, tp5, pink);
+
+		triangleList[32] =
+			Triangle(Vertex(5.0f, 2.0f, 1.0f), Vertex(4.0f, 4.0f, 2.0f), Vertex(6.0f, 3.0f, 2.0f), yellow);
 
 		//Add light to scene
 
 		std::vector<Triangle> lightVec = light.getLight();
 
-		triangleList[28] = lightVec.at(0);
-		triangleList[29] = lightVec.at(1);
+		triangleList[33] = lightVec.at(0);
+		triangleList[34] = lightVec.at(1);
+		
 
-		spheresList.push_back(Sphere(Vertex(-5.0f, 3.5f, 1.0f), 1.0, Material(ColorDbl(0.0f,1.0f,0.0f),PERFECT_REFL)));
+		spheresList.push_back(Sphere(Vertex(9.0f, -3.5f, 1.0f), 2.0, Material(ColorDbl(0.0f,1.0f,0.0f),PERFECT_REFL)));
+		spheresList.push_back(Sphere(Vertex(5.0f, -5.5f, -2.0f), 1.5, Material(ColorDbl(1.0f, 1.0f, 0.0f), PERFECT_REFL)));
+		spheresList.push_back(Sphere(Vertex(5.0f, -1.5f, -4.5f), 1.0, red));
 
 
 			}
 
-void Scene::castRay(Ray &ray)
+void Scene::castRay(Ray &ray, int rayDepth)
 {
 	ray.setColor(ColorDbl(0.0f, 0.0f, 0.0f));
 
+	if (rayDepth > 9) { return; } //originally rayDepth > 9
+	
+
 	for (Triangle tri : triangleList) {
-	//std::cout << "Triangle color: " << tri.getColor().red << ", "<< tri.getColor().blue << std::endl;
 		if (tri.rayIntersection(ray)) {
-			std::cout << "Color of triangle: " << tri.getMaterial().getColor().red << ", " << tri.getMaterial().getColor().green << ", " << tri.getMaterial().getColor().blue << std::endl;
-			
 		}
-		//if (triangleList->rayIntersection(r)) {
-			//r.setColor(tri.getColor());
-		//}
 	}
 
 	for (Sphere sph : spheresList) {
 		if (sph.rayIntersection(ray)) {
-			
 		}
 	}
 
-	// Vi vill inte räkna ut ytan om shadowray. Vi vill bara sätta rayens slutpunkt!
 
-	if (ray.getMaterial().getType() != SHADOW) {
+	if (ray.getRayType() != SHADOW) {
 
-		//int test = ray.getMaterial().type;
 		// Test what material the triangle has and compute accordingly
 		switch (ray.getMaterial().getType())
 		{
@@ -189,18 +183,27 @@ void Scene::castRay(Ray &ray)
 		}
 		case 1: // Lambertian
 		{
-			ColorDbl directLight = DirectLight(ray, false);// direct light contribution
-			// indirect light contribution
+			
+			ColorDbl directLight = DirectLight(ray, rayDepth); //direct light contribution
+			
+			
+			ColorDbl indirectLight = IndirectLight(ray, rayDepth); // indirect light contribution
+			
+			ray.setColor(directLight + indirectLight);
+			break;
 		}
-		case 2: { //Perfect reflection
+		case 2: { //Perfect reflection / Mirror
+			if (ray.getRayType() == SECONDARY) {
+				ray.setColor(ColorDbl(0.0f, 0.0f, 0.0f));
+				break;
+			}
+			float kr = 0.95; // 95% light reflecteed
+			Ray reflectionRay(ray.getEndingP(), glm::normalize(reflect(ray.getDirection(), ray.getObjectNormal())), REFLECTION);
+			castRay(reflectionRay, rayDepth + 1);
+			ray.setColor(reflectionRay.getColor() * kr);
+			break;
 		}
-		case 3: { // Transparent
-
-		}
-		case 4: { //Oren nayar
-			ColorDbl directLight = DirectLight(ray, true);// direct light contribution
-
-		}
+		
 		default: {
 			break;
 		}
@@ -211,10 +214,10 @@ void Scene::castRay(Ray &ray)
 std::default_random_engine generator;
 std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
-ColorDbl Scene::DirectLight(Ray& ray, bool or_na)
+ColorDbl Scene::DirectLight(Ray& ray, int current_rayDepth)
 {
 	// Lambertian reflection 
-	// Radiencen from pont x, with the out going direction phiOut equals
+	// Radiance from point x, with the outgoing direction phiOut equals
 	// the incoming radiance from every possible direction multiplyed by the surface's reflectivity, divided by pi.
 
 	ColorDbl directLight = ColorDbl(0.0f, 0.0f, 0.0f);
@@ -224,43 +227,99 @@ ColorDbl Scene::DirectLight(Ray& ray, bool or_na)
 	Vertex v1 = Vertex(0.0f, 1.0f, 0.0f);
 	Vertex v2 = Vertex(1.0f, 0.0f, 0.0f);
 	Vertex v3 = Vertex(1.0f, 1.0f, 0.0f);
+	
+
 	Vertex edge1 = v1 - v0;
 	Vertex edge2 = v2 - v0;
 
 	Direction lightNormal = Direction(0.0f, 0.0f, -1.0f);
 
 	int nrofShadowrays = 3;
-	for (int i = 0; i < nrofShadowrays; i++) {
 
+	for (int i = 0; i < nrofShadowrays; i++) {
+		float vk;
 		//get random point on area light
 		float u = distribution(generator);
 		float v = distribution(generator);
 
 		Vertex uv = Vertex(edge1*u +  edge2*v);
 
-		uv = uv + Vertex(-1.5f, 2.0f, 4.95f);
+		uv = uv + Vertex(5.5f, -0.5f, 4.85f);
 
 		Vertex s_i = uv - ray.getEndingP();
-		s_i.glmVertex = glm::vec3(s_i.x, s_i.y, s_i.z);
 
-		float d_i = glm::length(s_i.glmVertex);
-		float cosAlpha = glm::max(0.0f, glm::dot(-s_i.glmVertex, lightNormal.glmDirection));
-		float cosBeta = glm::max(0.0f, glm::dot(s_i.glmVertex, ray.getObjectNormal().glmDirection));
+		float d_i = glm::length(s_i);
+		float cosAlpha = glm::max(0.0f, glm::dot(-s_i, lightNormal)); 
+		float cosBeta = glm::max(0.0f, glm::dot(s_i, ray.getObjectNormal()));
 
-		// shadow ray
-
-		glm::vec3 shadowRayDir = glm::normalize(s_i.glmVertex);
-		Ray shadowRay = Ray(ray.getEndingP(), Direction(shadowRayDir.x, shadowRayDir.y, shadowRayDir.z), Material(ColorDbl{ 0.0f,0.0f,0.0f }, SHADOW));
+		// Form shadow ray
+		Direction shadowRayDir = glm::normalize(s_i);
+		Ray shadowRay = Ray(ray.getEndingP(), shadowRayDir, SHADOW);
 		
-		castRay(shadowRay);
+		castRay(shadowRay, 0);
 
-		//glm::vec3 glm_dirShadowray = glm::vec3(shadowRay.getDirection().x, shadowRay.getDirection().y, shadowRay.getDirection().z);
-		//float shadowRayLength = glm::length(glm_dirShadowray);
+		
+		float shadowRayLength = glm::length(shadowRay.getEndingP() - shadowRay.getStartingP());
+		if (shadowRayLength < d_i) {
+			vk = 0.0;
+		}
+		else {
+			vk = 1.0;
+		}
 		
 
+		directLight +=  ray.getColor() * 0.8f * vk * (cosAlpha * cosBeta / (d_i * d_i));
+			
+			
+	}
+	float area = glm::length(glm::cross(v1 - v0, v3 - v0));
+
+	return (directLight*area)/(float)nrofShadowrays;
+
+}
+
+ColorDbl Scene::IndirectLight(Ray &ray, int rayDepth) {
+
+	ColorDbl indirectLight = ColorDbl( 0.0f,0.0f,0.0f );
+
+	// Russian roulette
+	float R = 0.25f;
+	float random = (float)rand() / RAND_MAX;
+
+	if (random < R) { //If true, we terminate 1/4 of the ray
+		return indirectLight;
 	}
 
-	return directLight;
+	//Create local coordinate system
+	Direction N = ray.getObjectNormal();
+	Direction Nt, Nb;
 
+	if (std::fabs(N.x) > std::fabs(N.y))
+		Nt = Direction(N.z, 0.0f, -N.x) / (float)sqrt(N.x * N.x + N.z * N.z);
+	else
+		Nt = Direction(0.0f, -N.z, N.y) / (float)sqrt(N.y * N.y + N.z * N.z);
+	Nb = glm::cross(N, Nt);
+
+	
+	float r1 = distribution(generator);
+	float r2 = distribution(generator);
+
+	float sinTheta = sqrt(1.0f - r1 * r1);
+	float phi = 2.0 * M_PI * r2;
+	float x = sinTheta * cosf(phi);
+	float z = sinTheta * sinf(phi);
+	Direction sampleDirection = Direction(x, r1, z);
+
+	Direction sampleDirectionWorld(
+		sampleDirection.x * Nb.x + sampleDirection.y * N.x + sampleDirection.x + sampleDirection.z * Nt.x,
+		sampleDirection.x * Nb.y + sampleDirection.y * N.x + sampleDirection.y + sampleDirection.z * Nt.y,
+		sampleDirection.x * Nb.z + sampleDirection.y * N.x + sampleDirection.z + sampleDirection.z * Nt.z
+	);
+
+	Ray sampleRay = Ray(ray.getEndingP(), glm::normalize(sampleDirectionWorld), SECONDARY);
+	castRay(sampleRay, rayDepth + 1);
+	indirectLight = (ray.getColor() * 0.6f) * sampleRay.getColor();
+	
+	return indirectLight;
 }
 

@@ -2,38 +2,64 @@
 #include "Sphere.h"
 #include <glm\geometric.hpp>
 
-Sphere::Sphere(Vertex spPos, double r, Material m)
+
+Sphere::Sphere() = default;
+
+Sphere::~Sphere() = default;
+
+
+Sphere::Sphere(Vertex spPos, float r, Material m)
 {
-	position = spPos; // spherens mittpunkt
+	position = spPos; // The spheres midpoint
 	radius = r;
 	material = m;
+    color = m.getColor();
 }
 
 bool Sphere::rayIntersection(Ray& r)
 {
-    // till att börja med att se om ray skär i sphere (alltså kommer ray hamna innanför spheresn volume)
-	
-   // (ray direction - sphere mittpunkt ) < radius
+    
+    float minimumDistance = 1000;
+    Vertex tempIntersection;
+    float d1, d2;
+   // (Ray direction - sphere midpoint ) < radius
 	// https://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
-    //glm::vec3 rayDir = glm::vec3{r.direction.x, r.direction.y,r.direction.z}
     
     Vertex oc = r.getStartingP() - position;
-    glm::vec3 glm_oc = glm::vec3{oc.x, oc.y, oc.z};
-    float a = glm::dot(r.glmDirection, r.glmDirection);
-    float b = 2.0 * dot(glm_oc, r.glmDirection);
-    float c = dot(glm_oc, glm_oc) - radius * radius;
+    float a = (float)dot(r.getDirection(), r.getDirection());
+    float b = 2.0f * (float)dot(oc, r.getDirection());
+    float c = (float)dot(oc, oc) - radius * radius;
     float discriminant = b * b - 4 * a * c;
 
-    if (discriminant < 0) return false;
+    if (discriminant < 0) return false; //  If discriminant<0, the line of the ray does not intersect the sphere (missed);
     
-    /*
-    If discriminant<0, the line of the ray does not intersect the sphere (missed);
-    If discriminant=0, the line of the ray just touches the sphere in one point (tangent);
-    If discriminant>0, the line of the ray touches the sphere in two points (intersected).
-    */ 
-    r.setMaterial(getMaterial());
+    //One solution, if discriminant=0 the line of the ray just touches the sphere in one point (tangent);
+    else if (discriminant < DBL_EPSILON) {
+        d1 = -(b / 2.0f);
+        tempIntersection = r.getStartingP() + d1 * r.getDirection();
+    }
+    //Two solutions, if discriminant>0, the line of the ray touches the sphere in two points (intersected).
+    else {
+        d1 = -(b / 2.0f) + sqrt(pow((b / 2.0f), 2) - a * c);
+        d2 = -(b / 2.0f) - sqrt(pow((b / 2.0f), 2) - a * c);
 
-    r.setEndingP(r.getStartingP() + r.getDirection());
+        if (d2 > 0.0f) {
+            tempIntersection = r.getStartingP() + d2 * r.getDirection();
+        }
+        else if (d1 > 0.0f) {
+            tempIntersection = r.getStartingP() + d1 * r.getDirection();
+        }
+        else return false;
+    }
+
+    if (glm::length(tempIntersection - r.getStartingP()) < minimumDistance) {
+        minimumDistance = glm::length(tempIntersection - r.getStartingP());
+        Direction normal = glm::normalize(tempIntersection - position);
+        r.setObjectNormal(normal);
+        r.setColor(getColor());
+        r.setEndingP(tempIntersection + normal * 0.001f);
+        r.setMaterial(getMaterial());
+    }
 
     return true;
 }

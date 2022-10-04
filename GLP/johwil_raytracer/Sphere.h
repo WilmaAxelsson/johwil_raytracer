@@ -1,5 +1,6 @@
 #pragma once
-#include "Vertex.h"
+
+#include "definitions.h"
 #include "ColorDbl.h"
 #include "Ray.h"
 #include "materialTypes.h"
@@ -8,13 +9,18 @@ class Sphere
 {
 private:
 	Vertex position;
-	double radius = 0.0f;
+	float radius = 0.0f;
 	Material material;
+	ColorDbl color;
 
 public:
-	Sphere(Vertex spPos = Vertex{ 0.0f, 0.0f, 0.0f }, double r = 0.0, Material m = Material{ ColorDbl(0.0f, 0.0f, 0.0f), LAMBERTIAN });
+	Sphere();
+	~Sphere();
+
+	Sphere(Vertex spPos = Vertex{ 0.0f, 0.0f, 0.0f }, float r = 0.0f, Material m = Material{ ColorDbl(0.0f, 0.0f, 0.0f), LAMBERTIAN });
     bool rayIntersection(Ray& r);
 	Material getMaterial() { return material; }
+	ColorDbl getColor() { return color; }
 
 
 };

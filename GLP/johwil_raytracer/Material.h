@@ -1,5 +1,7 @@
 #pragma once
 #include "ColorDbl.h"
+
+#include "definitions.h"
 class Material
 {
 public:
